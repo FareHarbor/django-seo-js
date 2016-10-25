@@ -30,7 +30,8 @@ class PrerenderIO(SEOBackendBase, RequestsBasedBackend):
             'X-Prerender-Token': self.token,
         }
         r = self.session.get(render_url, headers=headers, allow_redirects=False)
-        assert r.status_code < 500
+        if r.status_code >= 500:
+            r.status_code = 503
 
         return self.build_django_response_from_requests_response(r)
 
